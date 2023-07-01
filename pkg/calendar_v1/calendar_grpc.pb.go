@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CalendarClient interface {
 	CreateEvent(ctx context.Context, in *CreateEventRequest, opts ...grpc.CallOption) (*CreateEventResponse, error)
-	UpdateEvent(ctx context.Context, in *UpdateEventRequest, opts ...grpc.CallOption) (*UpdateEventResponse, error)
+	UpdateEvent(ctx context.Context, in *UpdateEventRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetEvent(ctx context.Context, in *GetEventRequest, opts ...grpc.CallOption) (*GetEventResponse, error)
 	GetEventList(ctx context.Context, in *GetEventListRequest, opts ...grpc.CallOption) (*GetEventListResponse, error)
 	DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -47,8 +47,8 @@ func (c *calendarClient) CreateEvent(ctx context.Context, in *CreateEventRequest
 	return out, nil
 }
 
-func (c *calendarClient) UpdateEvent(ctx context.Context, in *UpdateEventRequest, opts ...grpc.CallOption) (*UpdateEventResponse, error) {
-	out := new(UpdateEventResponse)
+func (c *calendarClient) UpdateEvent(ctx context.Context, in *UpdateEventRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/api.calendar_v1.Calendar/UpdateEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func (c *calendarClient) DeleteEvent(ctx context.Context, in *DeleteEventRequest
 // for forward compatibility
 type CalendarServer interface {
 	CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error)
-	UpdateEvent(context.Context, *UpdateEventRequest) (*UpdateEventResponse, error)
+	UpdateEvent(context.Context, *UpdateEventRequest) (*emptypb.Empty, error)
 	GetEvent(context.Context, *GetEventRequest) (*GetEventResponse, error)
 	GetEventList(context.Context, *GetEventListRequest) (*GetEventListResponse, error)
 	DeleteEvent(context.Context, *DeleteEventRequest) (*emptypb.Empty, error)
@@ -102,7 +102,7 @@ type UnimplementedCalendarServer struct {
 func (UnimplementedCalendarServer) CreateEvent(context.Context, *CreateEventRequest) (*CreateEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateEvent not implemented")
 }
-func (UnimplementedCalendarServer) UpdateEvent(context.Context, *UpdateEventRequest) (*UpdateEventResponse, error) {
+func (UnimplementedCalendarServer) UpdateEvent(context.Context, *UpdateEventRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateEvent not implemented")
 }
 func (UnimplementedCalendarServer) GetEvent(context.Context, *GetEventRequest) (*GetEventResponse, error) {

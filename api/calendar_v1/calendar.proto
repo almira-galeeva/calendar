@@ -3,13 +3,14 @@ syntax = "proto3";
 package api.calendar_v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "github.com/almira-galeeva/calendar/pkg/calendar_v1";
 
 service Calendar {
     rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse);
-    rpc UpdateEvent (UpdateEventRequest) returns (UpdateEventResponse);
+    rpc UpdateEvent (UpdateEventRequest) returns (google.protobuf.Empty);
     rpc GetEvent (GetEventRequest) returns (GetEventResponse);
     rpc GetEventList (GetEventListRequest) returns (GetEventListResponse);
     rpc DeleteEvent (DeleteEventRequest) returns (google.protobuf.Empty);
@@ -28,6 +29,12 @@ message Event {
     google.protobuf.Timestamp updated_at = 4;
 }
 
+message UpdateEvent {
+    google.protobuf.StringValue title = 1;
+    google.protobuf.StringValue description = 2;
+    google.protobuf.Timestamp event_time = 3; 
+}
+
 message CreateEventRequest {
     EventBody event_body = 1;
 }
@@ -38,11 +45,7 @@ message CreateEventResponse {
 
 message UpdateEventRequest {
     int64 id = 1;
-    EventBody event_body = 2;
-}
-
-message UpdateEventResponse {
-    int64 id = 1;
+    UpdateEvent update_event = 2;
 }
 
 message GetEventRequest {
